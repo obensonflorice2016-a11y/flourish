@@ -20,11 +20,24 @@ jobs:
       - name: Prepare the site
         run: |
           mkdir -p _site
-          cp index.html styles.css app.js data.js qrcode.js sw.js manifest.json favicon.svg README.md .nojekyll _site/
+          decode() {
+            local name="$1"
+            if [ -f "$name" ] && [ "$(wc -c < "$name")" -gt 1000 ]; then
+              cp "$name" "_site/$name"
+            else
+              cat parts/"${name}".*.b64 | tr -d '\n' | base64 -d | gzip -d > "_site/$name"
+            fi
+          }
+          decode app.js
+          decode qrcode.js
+          cp index.html styles.css data.js sw.js manifest.json favicon.svg README.md .nojekyll _site/
           base64 -d apple-touch-icon.png.b64 > _site/apple-touch-icon.png
           base64 -d icon-180.png.b64 > _site/icon-180.png
           base64 -d icon-192.png.b64 > _site/icon-192.png
           base64 -d icon-512.png.b64 > _site/icon-512.png
+          test -s _site/app.js
+          test -s _site/index.html
+          test -s _site/icon-512.png
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
