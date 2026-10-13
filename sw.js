@@ -1,9 +1,12 @@
-const CACHE = "flourish-static-v7";
+const CACHE = "flourish-static-v21";
 const FILES = [
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./views.js",
   "./data.js",
+  "./cloud.js",
+  "./help.js",
   "./qrcode.js",
   "./manifest.json",
   "./favicon.svg",
@@ -14,36 +17,67 @@ const FILES = [
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(FILES)).then(() => self.skipWaiting()));
+  event.waitUntil(fill(FILES).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches
-      .keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
-      .then(() => self.clients.claim()),
-  );
+  event.waitUntil(tidy().then(() => self.clients.claim()));
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
-  const url = new URL(event.request.url);
+  const request = event.request;
+  if (request.method !== "GET") return;
+  const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  if (event.request.mode === "navigate") {
-    event.respondWith(caches.match("./index.html", { ignoreVary: true }).then((hit) => hit || fetch(event.request)));
-    return;
-  }
-  event.respondWith(
-    caches.match(event.request, { ignoreVary: true }).then((hit) => {
-      if (hit) return hit;
-      return fetch(event.request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE).then((cache) => cache.put(event.request, copy)).catch(() => undefined);
-          return response;
-        })
-        .catch(() => caches.match("./index.html", { ignoreVary: true }));
+  event.respondWith(networkFirst(request));
+});
+
+async function fill(files) {
+  const cache = await caches.open(CACHE);
+  await Promise.all(
+    files.map(async (file) => {
+      try {
+        const response = await fetch(new URL(file, self.location.href), { cache: "reload" });
+        if (response && response.ok) await cache.put(file, response);
+      } catch {
+        /* a missing file must not block install */
+      }
     }),
   );
-});
+}
+
+async function tidy() {
+  const keys = await caches.keys();
+  await Promise.all(keys.filter((key) => key.startsWith("flourish-") && key !== CACHE).map((key) => caches.delete(key)));
+}
+
+async function networkFirst(request) {
+  const cache = await caches.open(CACHE);
+  try {
+    const response = await fetch(request);
+    if (response && response.ok && response.type === "basic") {
+      try {
+        await cache.put(request, response.clone());
+      } catch {
+        /* some responses cannot be stored */
+      }
+    }
+    if (response) return response;
+  } catch {
+    /* offline or a dropped connection */
+  }
+  try {
+    const hit = await cache.match(request);
+    if (hit) return hit;
+    if (request.mode === "navigate" || request.destination === "document") {
+      const shell = (await cache.match("./index.html")) || (await cache.match("index.html"));
+      if (shell) return shell;
+    }
+  } catch {
+    /* cache unavailable */
+  }
+  return new Response("Flourish could not reach the network. Open the link once more while you are online.", {
+    status: 503,
+    headers: { "content-type": "text/plain; charset=utf-8" },
+  });
+}

@@ -20,7 +20,7 @@ jobs:
       - name: Prepare the site
         run: |
           mkdir -p _site
-          decode() {
+          copy_or_decode() {
             local name="$1"
             if [ -f "$name" ] && [ "$(wc -c < "$name")" -gt 1000 ]; then
               cp "$name" "_site/$name"
@@ -28,16 +28,23 @@ jobs:
               cat parts/"${name}".*.b64 | tr -d '\n' | base64 -d | gzip -d > "_site/$name"
             fi
           }
-          decode app.js
-          decode qrcode.js
-          cp index.html styles.css data.js sw.js manifest.json favicon.svg README.md .nojekyll _site/
+          copy_or_decode app.js
+          copy_or_decode views.js
+          copy_or_decode cloud.js
+          copy_or_decode help.js
+          copy_or_decode data.js
+          copy_or_decode qrcode.js
+          cp index.html styles.css sw.js manifest.json favicon.svg README.md .nojekyll _site/
           base64 -d apple-touch-icon.png.b64 > _site/apple-touch-icon.png
           base64 -d icon-180.png.b64 > _site/icon-180.png
           base64 -d icon-192.png.b64 > _site/icon-192.png
           base64 -d icon-512.png.b64 > _site/icon-512.png
           test -s _site/app.js
+          test -s _site/views.js
+          test -s _site/cloud.js
+          test -s _site/help.js
+          test -s _site/qrcode.js
           test -s _site/index.html
-          test -s _site/icon-512.png
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

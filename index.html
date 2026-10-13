@@ -23,20 +23,23 @@
           <h1>Less time. More life.</h1>
           <p class="motto" id="motto">Health is a daily choice</p>
         </div>
-        <p class="soft">Tuesday to Friday, one evening thing. Saturday afternoon, food and care. Sunday and Monday are empty on purpose. This copy lives on your phone.</p>
+        <p class="soft">One place for today, the week, the goals, and the deadlines. Thoughts land in the inbox. Sunday and Monday stay free unless you say otherwise.</p>
       </aside>
       <div id="phone">
         <main id="screen"></main>
-        <button id="theme" type="button" aria-label="Switch light or dark">☾</button>
+        <button id="theme" type="button">Dark</button>
+        <button id="dump" type="button">Brain dump</button>
         <nav id="nav">
           <button type="button" data-tab="today" class="active">Today</button>
+          <button type="button" data-tab="plan">Plan</button>
           <button type="button" data-tab="goals">Goals</button>
-          <button type="button" data-tab="path">Path</button>
-          <button type="button" data-tab="life">Life</button>
-          <button type="button" data-tab="setup">Settings</button>
+          <button type="button" data-tab="track">Trackers</button>
+          <button type="button" data-tab="help">Help</button>
         </nav>
       </div>
     </div>
+    <div id="overlay"></div>
+    <input id="import-file" type="file" accept="application/json,.json" hidden />
     <canvas id="confetti" aria-hidden="true"></canvas>
     <script src="./qrcode.js"></script>
     <script type="module" src="./app.js"></script>

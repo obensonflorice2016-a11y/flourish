@@ -33,16 +33,16 @@ If that page is not up yet, open the GitHub repo, go to Settings, then Pages, an
 - **Android:** open the link in Chrome. Tap Install app, or the browser menu, then Install app.
 - **Windows laptop:** open the link in Chrome or Edge. Use the Install icon in the address bar, or the menu, then Install.
 
-Inside the app, Settings has the same steps, a QR code for the link, and a New device guide. Settings also has **Save source zip**, which is this whole app in one file. Save that zip in Google Drive or OneDrive. If the link ever stops, unzip it and host the folder again (GitHub Pages from the `main` branch, root, or Netlify Drop).
+Inside the app, Plan has the same steps, near the bottom under This phone. Plan also has **Save a source zip**, which is this whole app in one file. Save that zip in Google Drive or OneDrive. If the link ever stops, unzip it and host the folder again (GitHub Pages from the `main` branch, root, or Netlify Drop).
 
 The full source is also kept at [github.com/obensonflorice2016-a11y/flourish](https://github.com/obensonflorice2016-a11y/flourish).
 
 ## D. Back up and restore
 
-1. Open Settings, or Life.
-2. Tap **Back up to file**. A dated JSON file is offered. It holds every tick, goal, score, note, and photo on this device.
+1. Open Plan, and scroll to This phone. Or use the backup note on Today when a week has passed.
+2. Tap **Back up to file**. A dated JSON file is offered. It holds every tick, goal, score, note, and deadline on this device.
 3. On a phone, the share sheet can save straight into Google Drive or OneDrive. On a laptop, the save window can put the file in the Drive or OneDrive folder.
 4. The home screen says how many days ago the last backup was. Every Sunday, Flourish asks again. Add to my calendar includes a Sunday backup reminder.
-5. On a new device: install from the link or the QR code, open Settings, tap **Restore from file**, and choose that JSON from Drive or OneDrive. Confirm. Your ticks, goals, photos and deadlines come back.
+5. On a new device: install from the link, open Plan, tap **Restore from file**, and choose that JSON from Drive or OneDrive. Confirm. Your ticks, goals and deadlines come back.
 
-Reminders still live on Life: Turn on reminders, and Add to my calendar. Sunday and Monday stay free of tasks. The Sunday note is only the backup reminder.
+Reminders and the calendar file are on Plan, under This phone. Sunday and Monday stay free of tasks. The Sunday note is only the backup reminder.
