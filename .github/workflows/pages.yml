@@ -20,31 +20,20 @@ jobs:
       - name: Prepare the site
         run: |
           mkdir -p _site
-          take() {
-            local name="$1"
-            if ls parts/"${name}".*.b64 >/dev/null 2>&1; then
-              cat parts/"${name}".*.b64 | tr -d '\n' | base64 -d | gzip -d > "_site/$name"
-            else
-              cp "$name" "_site/$name"
-            fi
-          }
-          take app.js
-          take views.js
-          take cloud.js
-          take help.js
-          take data.js
-          take qrcode.js
-          take styles.css
-          cp index.html sw.js manifest.json favicon.svg README.md .nojekyll _site/
-          base64 -d apple-touch-icon.png.b64 > _site/apple-touch-icon.png
-          base64 -d icon-180.png.b64 > _site/icon-180.png
-          base64 -d icon-192.png.b64 > _site/icon-192.png
-          base64 -d icon-512.png.b64 > _site/icon-512.png
+          cp app.js views.js data.js cloud.js help.js qrcode.js styles.css \
+            index.html sw.js manifest.json favicon.svg \
+            apple-touch-icon.png icon-180.png icon-192.png icon-512.png \
+            README.md .nojekyll _site/
           test -s _site/app.js
           test -s _site/views.js
+          test -s _site/data.js
           test -s _site/cloud.js
           test -s _site/help.js
+          test -s _site/qrcode.js
+          test -s _site/styles.css
           test -s _site/index.html
+          test -s _site/icon-192.png
+          test -s _site/icon-512.png
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
